@@ -65,12 +65,13 @@ def candidates():
     out.append(SELF_ROOT)                                  # 0. 自身位置
     h = _home()
     # 2. 各平台/各客户端的常见约定
-    for rel in ('skills', '.skills', '.claude/skills', '.codebuddy/skills',
-                '.config/ima/skills', 'ima/skills', '.codex/skills',
-                'AppData/Roaming/ima/skills', 'AppData/Roaming/codebuddy/skills'):
+    for rel in ('skills', '.skills', '.claude/skills', '.workbuddy/skills',
+                '.codebuddy/skills', '.config/ima/skills', 'ima/skills', '.codex/skills',
+                'AppData/Roaming/ima/skills', 'AppData/Roaming/workbuddy/skills',
+                'AppData/Roaming/codebuddy/skills'):
         out.append(os.path.join(h, rel.replace('/', os.sep), SKILL_NAME))
     # 2b. 旧目录名（兼容早期安装）
-    for rel in ('skills', '.skills', '.claude/skills', '.codebuddy/skills'):
+    for rel in ('skills', '.skills', '.claude/skills', '.workbuddy/skills', '.codebuddy/skills'):
         for legacy in LEGACY_NAMES:
             out.append(os.path.join(h, rel.replace('/', os.sep), legacy))
     # 3. 项目级安装
@@ -83,7 +84,7 @@ def candidates():
 def search(limit_depth=4):
     """兜底搜索：用户目录下按目录名找（限制深度，避免扫盘）。"""
     roots = [os.path.join(_home(), x) for x in ('skills', '.skills', '.claude',
-                                                '.codebuddy', '.config')]
+                                                '.workbuddy', '.codebuddy', '.config')]
     for root in roots:
         if not os.path.isdir(root):
             continue

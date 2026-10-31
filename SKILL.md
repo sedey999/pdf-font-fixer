@@ -2,7 +2,7 @@
 name: pdf-font-fixer
 display_name: pdf字体乱码修复神器
 display_name_en: PDF Fonts Fixer
-description: PDF 中文字体乱码的体检与修复工具。导出前检测字体风险，交付前逐字符审计并做交付门禁，也能直接修复已有 PDF 的方块字、缺字、文字消失。支持 PDF 字体检测、字体修复、PPT 转 PDF 递进导出、缺字兜底。当用户提到 PDF 乱码、方块字、问号、字体缺失、打印异常、手机预览异常、PPT 导出 PDF、PDF 字体检查时使用。
+description: PDF 中文字体乱码的体检与修复工具。导出前检测字体风险，交付前逐字符审计并做交付门禁，也能直接修复已有 PDF 的方块字、缺字、文字消失。支持 PDF 字体检测、字体修复、PPT 转 PDF 递进导出、缺字兜底；不内嵌任何字体，自动发现本机可用的 TrueType 中文字体。当用户提到 PDF 乱码、方块字、问号、字体缺失、打印异常、手机预览异常、PPT 导出 PDF、PDF 字体检查时使用。
 description_zh: 专治「本机看着正常、别人打开全是方块」的 PDF 字体问题。一条命令完成字体体检、逐字符审计与交付门禁，也能直接修复已有 PDF 的乱码、缺字与文字消失，无需重做排版。
 description_en: Diagnose and repair broken Chinese fonts in PDFs. Detect risky font outlines before delivery, audit every glyph, gate releases, and fix existing PDFs with tofu boxes, missing glyphs, or dropped text — without redoing the layout.
 examples_zh:
@@ -13,7 +13,7 @@ examples_en:
   - "Check whether this PDF will display Chinese correctly on other devices"
   - "This PDF shows tofu boxes on another computer — fix it for me"
   - "The PDF exported from my slides has missing text; give me a version that renders everywhere"
-version: 1.0.1
+version: 1.0.2
 author: "多裴港格"
 ---
 
@@ -118,7 +118,7 @@ python3 $S/pptx.py 演示.pptx --keep-copy   # 只接受第 1 步（保留复制
 
 # ⑥ 字体工具
 python3 $S/fontkit.py list                 # 本机中文 TrueType
-python3 $S/fontkit.py find "Noto Sans CJK SC"
+python3 $S/fontkit.py find "Noto Sans SC"
 python3 $S/fontkit.py to-ttf x.otf -o x.ttf --text "用到的字"    # OTF→TTF（先子集，快）
 python3 $S/fontkit.py lint x.ttf --text "文本"                   # 查缺字（豆腐块预警）
 
@@ -173,13 +173,14 @@ python3 $S/autofallback.py --from-json cards.json --main <主字体> -o fb.ttf -
 |---|---|
 | 0 | **脚本自身位置**（`__file__` 往上两级）—— 能跑脚本就说明找对了 |
 | 1 | 环境变量 `PDF_FONT_FIXER` |
-| 2 | 多平台约定目录：`~/.skills`、`~/.claude/skills`、`~/.codebuddy/skills`、`~/.config/ima/skills`、`AppData/Roaming/*`、项目内 `./skills` |
+| 2 | 多平台约定目录：`~/.skills`、`~/.claude/skills`、`~/.workbuddy/skills`、`~/.codebuddy/skills`、`~/.config/ima/skills`、`AppData/Roaming/*`、项目内 `./skills` |
 | 3 | 用户目录限深搜索（≤4 层） |
 
 调用方（其它 skill）一行候选链，跨 bash/zsh：
 
 ```bash
 for c in "$PDF_FONT_FIXER" "$HOME/.skills/pdf-fonts-fixer" "$HOME/.claude/skills/pdf-fonts-fixer" \
+         "$HOME/.workbuddy/skills/pdf-fonts-fixer" \
          "$HOME/.codebuddy/skills/pdf-fonts-fixer" "./skills/pdf-fonts-fixer"; do
   [ -f "$c/scripts/gate.py" ] && FIXER="$c" && break
 done
