@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""pdf-font-fixer · gate —— 一步式交付门禁（detect + verify 合体）
+"""pdf-fonts-fixer · gate —— 一步式交付门禁（detect + verify 合体）
 
 其它 skill 只需要记这一条命令：
 

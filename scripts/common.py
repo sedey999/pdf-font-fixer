@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""pdf-font-fixer · common —— 各脚本共用的工具函数（不对外当命令用）
+"""pdf-fonts-fixer · common —— 各脚本共用的工具函数（不对外当命令用）
 
-设计要点（2026-10-31 用户裁定）
+设计要点
 ------------------------------
 1. **不内嵌任何字体**。字体靠 discover.py 扫本机：Windows→微软雅黑/宋体，
    macOS→Heiti SC，Linux→文泉驿/Droid/Noto Sans SC。唯一硬约束是轮廓必须是 TrueType。

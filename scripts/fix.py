@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""pdf-font-fixer · fix —— 修复已有 PDF 的字体问题
+"""pdf-fonts-fixer · fix —— 修复已有 PDF 的字体问题
 
 修复策略是**递进**的，能用轻手段就不用重手段：
 

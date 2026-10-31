@@ -1,13 +1,29 @@
 ---
 name: pdf-font-fixer
-description: PDF 字体体检与修复，防止「本机看着正常、别人手机上中文乱码」。当需要交付 PDF（打印、发微信、给家长/老师看）、PPT 导出 PDF、或已有 PDF 出现方块/乱码/部分文字消失时使用。提供 detect 体检、verify 逐字符审计、gate 交付门禁、fix 修复已有 PDF、pptx 递进式导出、fontkit 字体工具、autofallback 缺字兜底。其它排版 skill 出 PDF 后必须调用 gate.py 作为交付门禁。不内嵌任何字体，靠 discover.py 发现本机可用的 TrueType 中文字体。
+display_name: pdf字体乱码修复神器
+display_name_en: PDF Fonts Fixer
+description: PDF 中文字体乱码的体检与修复工具。导出前检测字体风险，交付前逐字符审计并做交付门禁，也能直接修复已有 PDF 的方块字、缺字、文字消失。支持 PDF 字体检测、字体修复、PPT 转 PDF 递进导出、缺字兜底。当用户提到 PDF 乱码、方块字、问号、字体缺失、打印异常、手机预览异常、PPT 导出 PDF、PDF 字体检查时使用。
+description_zh: 专治「本机看着正常、别人打开全是方块」的 PDF 字体问题。一条命令完成字体体检、逐字符审计与交付门禁，也能直接修复已有 PDF 的乱码、缺字与文字消失，无需重做排版。
+description_en: Diagnose and repair broken Chinese fonts in PDFs. Detect risky font outlines before delivery, audit every glyph, gate releases, and fix existing PDFs with tofu boxes, missing glyphs, or dropped text — without redoing the layout.
+examples_zh:
+  - "帮我检查这份 PDF 发到手机上会不会中文乱码"
+  - "这份 PDF 在别的电脑上显示成方块，帮我修好"
+  - "PPT 导出的 PDF 有字显示不出来，给我一份到处都能正常打开的版本"
+examples_en:
+  - "Check whether this PDF will display Chinese correctly on other devices"
+  - "This PDF shows tofu boxes on another computer — fix it for me"
+  - "The PDF exported from my slides has missing text; give me a version that renders everywhere"
+version: 1.0.1
+author: "多裴港格"
 ---
 
-# PDF Font Fixer
+# pdf字体乱码修复神器
 
-交付 PDF 前的字体关卡。解决的问题：**自己在电脑上看完全正常，发到别人手机上中文全是乱码符号，但复制出来文字是对的**。
+**专治 PDF 的「字体分裂症」：你在自己电脑上看一切正常，发出去却变成方块、问号、乱码，甚至整段文字凭空消失——但复制出来的文字又是对的。**
 
-## 0. 铁律（用户 2026-10-31 定，不得让步）
+问题不在内容，而在 PDF 内嵌字体的轮廓格式。本技能在**交付前**把风险查出来，也能把**已经出问题的 PDF** 救回来，无需重做排版。
+
+## 0. 铁律（不得让步）
 
 1. **任何要交付的 PDF，导出后第一件事就是 `gate.py`**。退出码非 0 一律不许交付。
 2. **不内嵌任何字体**。字体靠 `discover.py` 扫本机已有的 TrueType 中文字体
@@ -24,7 +40,7 @@ description: PDF 字体体检与修复，防止「本机看着正常、别人手
 
 PDF 里文字靠「字体程序」画字形，轮廓格式决定能不能显示：
 
-| 轮廓格式 | PDF 内部 | 实测结果（2026-10-31 华为真机） |
+| 轮廓格式 | PDF 内部 | 实测结果（华为真机） |
 |---|---|---|
 | **TrueType**（glyf） | `FontFile2` / `CIDFontType2` | ✅ 正常 |
 | **CFF（OpenType 包装）** | `FontFile3` / `/OpenType` | ❌ 画不出字形 → 中文乱码（weasyprint、Chrome 类产物） |
@@ -42,7 +58,7 @@ python3 scripts/discover.py --best     # 只输出最优的 Regular / Bold 两�
 python3 scripts/discover.py --json
 ```
 
-判定逻辑：**扫各平台字体目录 → 读文件头判轮廓（`OTTO`=CFF，其余=TrueType）→ 抽查常用汉字判是否中文正体 → TrueType 优先、字形数降序**。缓存 7 天。
+判定逻辑：**扫各平台字体目录 → 读文件头判轮廓（`OTTO`=CFF，其余=TrueType）→ 抽查常用汉字判是否中文正体 → TrueType 优先、字形数降序**。结果缓存复用。
 
 ### 本机没有 TrueType 中文字体时，给这些**官方**渠道
 
@@ -163,11 +179,11 @@ python3 $S/autofallback.py --from-json cards.json --main <主字体> -o fb.ttf -
 调用方（其它 skill）一行候选链，跨 bash/zsh：
 
 ```bash
-for c in "$PDF_FONT_FIXER" "$HOME/.skills/pdf-font-fixer" "$HOME/.claude/skills/pdf-font-fixer" \
-         "$HOME/.codebuddy/skills/pdf-font-fixer" "./skills/pdf-font-fixer"; do
+for c in "$PDF_FONT_FIXER" "$HOME/.skills/pdf-fonts-fixer" "$HOME/.claude/skills/pdf-fonts-fixer" \
+         "$HOME/.codebuddy/skills/pdf-fonts-fixer" "./skills/pdf-fonts-fixer"; do
   [ -f "$c/scripts/gate.py" ] && FIXER="$c" && break
 done
-[ -z "$FIXER" ] && { echo "❌ 未找到 pdf-font-fixer，请设置 PDF_FONT_FIXER"; exit 2; }
+[ -z "$FIXER" ] && { echo "❌ 未找到 pdf-fonts-fixer，请设置 PDF_FONT_FIXER"; exit 2; }
 python3 "$FIXER/scripts/gate.py" 产物.pdf
 ```
 
