@@ -34,6 +34,9 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
+import _deps          # 持久依赖：环境重置后自动从持久目录补齐
+_deps.activate()
+
 import detect
 import verify
 
@@ -134,7 +137,10 @@ def main():
                     else:
                         print('[auto-fix] 修复失败（rc=%d），必须人工处理。' % rc)
             else:
-                print('\n✅ 门禁通过：字体轮廓为 TrueType、字典结构正常、每个字都有归属字形。')
+                if st.get('skipped'):
+                    print('\n⚠️ 门禁不完整：轮廓格式与逐字归属通过，但字典结构关未能执行。')
+                else:
+                    print('\n✅ 门禁通过：字体轮廓为 TrueType、字典结构正常、每个字都有归属字形。')
 
     if a.json:
         print(json.dumps(payload if len(payload) > 1 else (payload[0] if payload else {}),

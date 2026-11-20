@@ -13,7 +13,7 @@ examples_en:
   - "Check whether this PDF will display Chinese correctly on other devices"
   - "This PDF shows tofu boxes on another computer — fix it for me"
   - "The PDF exported from my slides has missing text; give me a version that renders everywhere"
-version: 1.1.0
+version: 1.1.1
 author: "多裴港格"
 ---
 

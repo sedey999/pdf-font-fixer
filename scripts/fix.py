@@ -37,6 +37,9 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
+import _deps          # 持久依赖：环境重置后自动从持久目录补齐
+_deps.activate()
+
 import common as C
 from detect import inspect_pdf, report
 

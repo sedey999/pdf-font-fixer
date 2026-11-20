@@ -44,6 +44,10 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import _deps          # 持久依赖：环境重置后自动从持久目录补齐
+_deps.activate()
+
 try:
     import pikepdf
     HAS_PIKEPDF = True

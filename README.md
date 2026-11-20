@@ -27,6 +27,7 @@ LibreOffice 导出，中文字体被当成 Symbolic 简单字体。
 - `gate.py` — 交付门禁，退出码非 0 不许交付
 - `gate_hook.py` — 供其它 skill 在导出后强制调用门禁的统一钩子
 - `fix.py` — 递进修复：charset 重写 → 矢量轮廓 → 300dpi 扫描版，并保留原生版对照
+- `_deps.py` — 依赖持久化：沙箱重置后自动从持久目录补齐 pikepdf / pymupdf / fontTools
 - `pptx.py` — PPT 递进式导出（单份可复制 → 轮廓版 → 扫描版）
 - `fontkit.py` — 本机中文 TrueType 发现、OTF→TTF、缺字 lint
 - `autofallback.py` — 缺字兜底字体生成 + CSS 片段
@@ -45,6 +46,8 @@ LibreOffice 导出，中文字体被当成 Symbolic 简单字体。
 `pymupdf`、`fonttools`、`pikepdf`（可选 `ghostscript`、`cairosvg`、`soffice`），全部有官方获取路径；
 缺失时脚本自行降级并打印官方安装方式。
 无 ghostscript 时优先用 pymupdf + cairosvg 转轮廓，二者都不可用才回退扫描版。
+`_deps.py` 会把必需包装进 `~/.pdf-font-fixer-deps`（可用 `PDF_FONT_FIXER_DEPS` 覆盖），
+环境重置后自动补齐；字典结构关无法执行时门禁会明确报「不完整」而不是静默放行。
 
 ## 用法
 
